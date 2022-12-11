@@ -12,8 +12,9 @@ fn read_data(file_path: String) {
         .expect("Should have been able to read the file");
 
     println!("With text:\n{contents}");
+    contents;
 }
 
-fn iterate_elfs_group_calories() {
+fn iterate_elfs_group_calories(calories: io::Result<String>) {
 
 }
