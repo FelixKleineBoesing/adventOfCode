@@ -11,7 +11,7 @@ target_include_directories(aoc
         ${PROJECT_SOURCE_DIR}/include
 )
 
-
+    
 # try conditional compilation
 include(CheckCXXCompilerFlag)
 CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)

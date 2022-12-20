@@ -1,18 +1,14 @@
-import os
 from pathlib import Path
 from typing import List
+
+from python.aoc.shared import read_file
 
 
 def day_one(file_path: Path):
     lines = read_file(file_path)
     max_calorie_elf, max_calories = find_max_calorie_elf(lines)
     print("Max calorie elf: {}, max_calories: {}".format(max_calorie_elf, max_calories))
-
-
-def read_file(file_path: Path):
-    with open(file_path, 'r') as f:
-        lines = f.readlines()
-        return lines
+    return max_calorie_elf, max_calories
 
 
 def find_max_calorie_elf(lines: List[str]):
