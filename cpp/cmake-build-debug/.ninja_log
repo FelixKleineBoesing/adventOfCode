@@ -1,0 +1,7 @@
+# ninja log v5
+0	388	6932480299542307	CMakeFiles/aoc_main.dir/src/main.cpp.obj	97a4b5623e9dd0b9
+3	369	6932480445654126	CMakeFiles/aoc.dir/src/aoc.cpp.obj	ecc13b1a10ef476
+370	483	6932480446824131	libaoc.a	4fac464b61d8e945
+483	649	6932480448414131	aoc_main.exe	a5e5d39d4fcee5d5
+4	357	6932482179972231	CMakeFiles/aoc_main.dir/src/main.cpp.obj	97a4b5623e9dd0b9
+358	520	6932482181543923	aoc_main.exe	a5e5d39d4fcee5d5

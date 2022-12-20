@@ -1,7 +1,10 @@
 
 #include <iostream>
+#include "static/aoc.h"
 
 int main() {
-    std::cout << "Hello World!";
+
+    AdventOfCode aoc;
+    aoc.day_one();
     return 0;
 }

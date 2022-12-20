@@ -2,7 +2,7 @@
 
 #include "static/aoc.h"
 
-void AdventOfCode:day_one()
+void AdventOfCode::day_one()
 {
     std::cout << "Test!" << std::endl;
 }
