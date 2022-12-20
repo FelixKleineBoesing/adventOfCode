@@ -4,7 +4,7 @@
 class AdventOfCode
 {
 public:
-    void day_one();
+    void day_one(const std::string& file_path);
 };
 
 #endif
