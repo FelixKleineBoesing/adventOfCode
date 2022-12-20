@@ -1,0 +1,1 @@
+D:\CodingProjects\adventOfCodeRust\rust\target\debug\aoc.exe: D:\CodingProjects\adventOfCodeRust\rust\src\day_one.rs D:\CodingProjects\adventOfCodeRust\rust\src\day_two.rs D:\CodingProjects\adventOfCodeRust\rust\src\main.rs
