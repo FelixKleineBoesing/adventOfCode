@@ -1,9 +1,40 @@
 from pathlib import Path
-
+import copy
 from python.aoc.shared import read_file_clean
 
 
 def day_five(file_path: Path):
+    print("Part 1")
+    day_five_part_one(file_path)
+    print("Part 2")
+    day_five_part_two(file_path)
+
+
+def day_five_part_two(file_path: Path):
+    stacks, moves = get_moves_and_stacks(file_path)
+    for move in moves:
+        from_, to, n = move
+        stacks[to].extend(copy.copy(stacks[from_][-n:]))
+        del stacks[from_][-n:]
+    top_level_items = []
+    for stack in stacks.values():
+        if len(stack) > 0:
+            top_level_items.append(stack[-1])
+    print("Top level items: {}".format("".join(top_level_items)))
+
+
+def day_five_part_one(file_path: Path):
+    stacks, moves = get_moves_and_stacks(file_path)
+    for move in moves:
+        from_, to, n = move
+        for i in range(n):
+            stacks[to].append(stacks[from_].pop())
+
+    top_level_items = [s.pop() for s in stacks.values()]
+    print("Top level items: {}".format("".join(top_level_items)))
+
+
+def get_moves_and_stacks(file_path: Path):
     lines = read_file_clean(file_path)
     stack_lines = []
     move_lines = []
@@ -19,14 +50,7 @@ def day_five(file_path: Path):
 
     stacks = get_stacks(stack_positions, stack_lines)
     moves = parse_moves(move_lines)
-    for move in moves:
-        from_, to, n = move
-        for i in range(n):
-            stacks[to].append(stacks[from_].pop())
-
-    top_level_items = [s.pop() for s in stacks.values()]
-    print("Top level items: {}".format("".join(top_level_items)))
-
+    return stacks, moves
 
 def get_stacks(stack_positions, stack_lines):
     stack_positions = {int(i): index for index, i in enumerate(stack_positions) if i != " "}
