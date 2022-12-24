@@ -10,6 +10,37 @@ def day_eight(file_path: Path):
     day_eight_part_two(file_path)
 
 
+def day_eight_part_two(file_path: Path):
+    lines = read_file_clean(file_path)
+    tree_array, (rows, cols) = get_tree_array(lines)
+    scenic_scores = [[0 for _ in range(cols)] for _ in range(rows)]
+    for i in range(rows):
+        for j in range(cols):
+            scenic_scores[i][j] = get_scenic_score(tree_array, rows, cols, i, j)
+    print("Max scenic score: {}".format(max([max(row) for row in scenic_scores])))
+
+
+def get_scenic_score(tree_array, rows, cols, row, col):
+    up, down, left, right = 1, 1, 1, 1
+    for i in range(row + 1, rows):
+        if tree_array[i][col] >= tree_array[row][col] or i == rows - 1:
+            down = i - row
+            break
+    for i in range(row - 1, -1, -1):
+        if tree_array[i][col] >= tree_array[row][col] or i == 0:
+            up = row - i
+            break
+    for i in range(col + 1, cols):
+        if tree_array[row][i] >= tree_array[row][col] or i == cols - 1:
+            right = i - col
+            break
+    for i in range(col - 1, -1, -1):
+        if tree_array[row][i] >= tree_array[row][col] or i == 0:
+            left = col - i
+            break
+    return right * left * down * up
+
+
 def day_eight_part_one(file_path: Path):
     lines = read_file_clean(file_path)
     tree_array, (rows, cols) = get_tree_array(lines)
@@ -23,7 +54,7 @@ def day_eight_part_one(file_path: Path):
 
 def update_visibility_array_rowwise(visibility, tree_array, rows, cols, direction=1):
     for i in range(rows):
-        last_height = 0
+        last_height = -1
         range_ = get_range(cols, direction)
         for j in range(*range_):
             if tree_array[i][j] > last_height:
@@ -33,7 +64,7 @@ def update_visibility_array_rowwise(visibility, tree_array, rows, cols, directio
 
 def update_visibility_array_colunwise(visibility, tree_array, rows, cols, direction=1):
     for j in range(cols):
-        last_height = 0
+        last_height = -1
         range_ = get_range(rows, direction)
         for i in range(*range_):
             if tree_array[i][j] > last_height:
@@ -47,10 +78,6 @@ def get_range(number, direction=1):
     else:
         range_ = (number-1, -1, -1)
     return range_
-
-def day_eight_part_two(file_path: Path):
-    lines = read_file_clean(file_path)
-    tree_array, (rows, cols) = get_tree_array(lines)
 
 
 def get_tree_array(lines):
