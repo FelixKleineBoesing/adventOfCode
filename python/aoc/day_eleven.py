@@ -1,3 +1,4 @@
+import copy
 from pathlib import Path
 
 from python.aoc.shared import read_file_clean
@@ -11,13 +12,66 @@ def day_eleven(file_path: Path):
 
 
 def day_eleven_part_two(file_path: Path):
-    pass
+    lines = read_file_clean(file_path)
+    number_rounds = 10000
+    monkeys = parse_monkeys(lines)
+
+    modulu_all = 1
+    for monkey_id in monkeys.keys():
+        monkey = monkeys[monkey_id]
+        modulu_all *= int(monkey["divisor"])
+
+    def worry_level_func(a):
+        return a % modulu_all
+
+    number_items_seen = {m: 0 for m in monkeys}
+    for i in range(number_rounds):
+        for monkey_id in monkeys.keys():
+            tmp_seen_items = simulate_monkey(monkey_id, monkeys, worry_level_func=worry_level_func)
+            number_items_seen[monkey_id] += tmp_seen_items
+
+    most_active_monkeys = sorted(number_items_seen.values(), key=lambda x: x, reverse=True)
+    print("This is the monkey business: {}".format(most_active_monkeys[0] * most_active_monkeys[1]))
 
 
 def day_eleven_part_one(file_path: Path):
     lines = read_file_clean(file_path)
+    number_rounds = 20
     monkeys = parse_monkeys(lines)
+    number_items_seen = {m: 0 for m in monkeys}
 
+    def worry_level_func(a):
+        return a / 3
+
+    for i in range(number_rounds):
+        for monkey_id in monkeys.keys():
+            tmp_seen_items = simulate_monkey(monkey_id, monkeys, worry_level_func=worry_level_func)
+            number_items_seen[monkey_id] += tmp_seen_items
+
+    most_active_monkeys = sorted(number_items_seen.values(), key=lambda x: x, reverse=True)
+    print("This is the monkey business: {}".format(most_active_monkeys[0] * most_active_monkeys[1]))
+
+
+def multiply(*args):
+    result = 1
+    for arg in args:
+        result *= arg
+    return result
+
+
+def simulate_monkey(monkey_id, monkeys, worry_level_func):
+    monkey = monkeys[monkey_id]
+    number_seen_items = len(monkey["items"])
+    original_items = copy.copy(monkey["items"])
+    for i, item in enumerate(original_items):
+        worry_level = monkey["op_func"](item)
+        worry_level = worry_level_func(worry_level)
+        if monkey["test_func"](worry_level):
+            monkeys[monkey["if_true"]]["items"].append(worry_level)
+        else:
+            monkeys[monkey["if_false"]]["items"].append(worry_level)
+    monkey["items"] = []
+    return number_seen_items
 
 
 def parse_monkeys(lines):
@@ -26,6 +80,7 @@ def parse_monkeys(lines):
     for i, line in enumerate(lines):
         if "Monkey" in line:
             _, monkey_id = line.split(" ")
+            monkey_id = int(monkey_id.replace(":", " "))
         elif "Starting items" in line:
             _, items = line.split(": ")
             items = [int(i) for i in items.split(", ")]
@@ -48,15 +103,24 @@ def parse_monkeys(lines):
                 "op_func": op_func,
                 "test_func": test_func,
                 "if_true": if_true,
-                "if_false": if_false
+                "if_false": if_false,
+                "divisor": divisor
             }
+    monkeys[monkey_id] = {
+        "items": items,
+        "op_func": op_func,
+        "test_func": test_func,
+        "if_true": if_true,
+        "if_false": if_false,
+        "divisor": divisor
+    }
     return monkeys
+
 
 def get_test_func(divisor):
     def test_func(val):
         return val % divisor == 0
     return test_func
-
 
 
 def get_operation_func(op_val1, op, op_val2):

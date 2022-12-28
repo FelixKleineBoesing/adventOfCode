@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from day_eight import day_eight
+from day_eleven import day_eleven
 from day_seven import day_seven
 from day_six import day_six
 from python.aoc.day_five import day_five
@@ -44,6 +45,8 @@ def main():
     print("Day 10")
     day_ten(Path(file_path_general.format(10)))
 
+    print("Day 11")
+    day_eleven(Path(file_path_general.format(11)))
 
 if __name__ == "__main__":
     main()
