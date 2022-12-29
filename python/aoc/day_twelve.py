@@ -20,7 +20,22 @@ def day_twelve_part_one(file_path: Path):
     hill, start = parse_hill(lines)
     shortest_path = find_shortest_path(hill, start,target=hill_values["E"])
     print("Shortest path: {}".format(len(shortest_path) - 1))
-    print_shortest_path(hill, shortest_path)
+
+
+def day_twelve_part_two(file_path: Path):
+    lines = read_file_clean(file_path)
+    hill, start = parse_hill(lines)
+    x, y = hill.shape()
+    starts = []
+    for row in range(x):
+        for col in range(y):
+            if hill[row, col] == 0:
+                starts.append((row, col))
+    shortest_paths = []
+    shortest_paths = find_multiple_starts_shortest_path(hill, starts, target=hill_values["E"])
+    len_shortest_paths = [len(p) for p in shortest_paths]
+    min_steps = min(len_shortest_paths) - 1
+    print("Shortest path: {}".format(min_steps))
 
 
 class Hill:
@@ -109,28 +124,6 @@ def get_neighbor_nodes(hill, current_node, len_x: int, len_y: int):
     if current_node[1] < len_y - 1:
         n_nodes.append((current_node[0], current_node[1] + 1))
     return [n for n in n_nodes if hill[n] - hill[current_node] <= 1]
-
-
-def day_twelve_part_two(file_path: Path):
-    lines = read_file_clean(file_path)
-    hill, start = parse_hill(lines)
-    x, y = hill.shape()
-    starts = []
-    for row in range(x):
-        for col in range(y):
-            if hill[row, col] == 0:
-                starts.append((row, col))
-    shortest_paths = []
-    shortest_paths = find_multiple_starts_shortest_path(hill, starts, target=hill_values["E"])
-    # for start in starts:
-    #     try:
-    #         shortest_path = find_shortest_path(hill, start, target=hill_values["E"])
-    #         shortest_paths.append(shortest_path)
-    #     except NoPathFound:
-    #         pass
-    len_shortest_paths = [len(p) for p in shortest_paths]
-    min_steps = min(len_shortest_paths)
-    print("Shortest path: {}".format(min_steps))
 
 
 def parse_hill(lines):
