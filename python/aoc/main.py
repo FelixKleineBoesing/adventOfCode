@@ -8,6 +8,7 @@ from python.aoc.day_five import day_five
 from python.aoc.day_nine import day_nine
 from python.aoc.day_one import day_one
 from python.aoc.day_ten import day_ten
+from python.aoc.day_twelve import day_twelve
 from python.aoc.day_two import day_two
 from python.aoc.day_three import day_three
 from python.aoc.day_four import day_four
@@ -47,6 +48,9 @@ def main():
 
     print("Day 11")
     day_eleven(Path(file_path_general.format(11)))
+
+    print("Day 12")
+    day_twelve(Path(file_path_general.format(12)))
 
 if __name__ == "__main__":
     main()
