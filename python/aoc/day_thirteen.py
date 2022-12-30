@@ -46,7 +46,6 @@ def day_thirteen_part_two(file_path):
         if line == [[6]]:
             dec_2 = i + 1
 
-
     print("Dec 1: {}, Dec 2: {}, Product: {}".format(dec_1, dec_2, dec_1*dec_2))
 
 
