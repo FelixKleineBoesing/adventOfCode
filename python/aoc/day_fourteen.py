@@ -40,7 +40,7 @@ def day_fourteen_part_one(file_path):
         particle_settled = False
         current_pos = sand_entry
         while not particle_settled:
-            particle_settled, current_pos = move_particle(current_pos, (0, 1))
+            particle_settled, current_pos = check_if_move_possible(cave, current_pos)
 
         if current_pos[0] <= 0 or 0 > current_pos[1] > cave.max_y:
             space_full = True
@@ -55,14 +55,14 @@ def day_fourteen_part_one(file_path):
 
 
 def check_if_move_possible(cave, current_pos):
-    if place_free(cave, current_pos, (-1, 0)):
-        new_pos = move_particle(current_pos, (1, 0))
-        return True, new_pos
-    elif place_free(cave, current_pos, (-1, -1)):
+    if place_free(cave, current_pos, (0, -1)):
         new_pos = move_particle(current_pos, (0, -1))
         return True, new_pos
-    elif place_free(cave, current_pos, (-1, 1)):
-        new_pos = move_particle(current_pos, (0, 1))
+    elif place_free(cave, current_pos, (-1, -1)):
+        new_pos = move_particle(current_pos, (-1, -1))
+        return True, new_pos
+    elif place_free(cave, current_pos, (1, -1)):
+        new_pos = move_particle(current_pos, (1, -1))
         return True, new_pos
     return False, current_pos
 
@@ -88,7 +88,7 @@ class Cave:
     def __init__(self, len_x, len_y):
         self.len_x = len_x
         self.len_y = len_y
-        self.grid = [[0 for _ in range(len_x)] for _ in range(len_y)]
+        self.grid = [[0 for _ in range(len_y)] for _ in range(len_x)]
 
     def __getitem__(self, item):
         return self.grid[item[0]][item[1]]
@@ -140,13 +140,14 @@ def build_cave(cave, stone_lines):
     for stone_line in stone_lines:
         for i in range(len(stone_line)-1):
             node, next_node = stone_line[i], stone_line[i + 1]
+            # TODOthis is wrong
             diff = node[0] - next_node[0], node[1] - next_node[1]
             diff_value = max(diff)
             index = argmax(diff)
             for i in range(diff_value + 1):
                 if index == 0:
-                    cave[next_node[0] + i, node[1]] = 1
+                    cave[next_node[0] + i, next_node[1]] = 1
                 else:
-                    cave[node[0], next_node[1] + i] = 1
+                    cave[next_node[0], next_node[1] + i] = 1
 
     return cave
