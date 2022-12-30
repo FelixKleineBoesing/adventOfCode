@@ -4,6 +4,7 @@ from day_eight import day_eight
 from day_eleven import day_eleven
 from day_seven import day_seven
 from day_six import day_six
+from day_thirteen import day_thirteen
 from python.aoc.day_five import day_five
 from python.aoc.day_nine import day_nine
 from python.aoc.day_one import day_one
@@ -14,7 +15,7 @@ from python.aoc.day_three import day_three
 from python.aoc.day_four import day_four
 
 
-def main():
+def main(short_run: bool = False):
     file_path_general = "../../data/day_{}"
     print("Day 1")
     day_one(Path(file_path_general.format(1)))
@@ -50,7 +51,13 @@ def main():
     day_eleven(Path(file_path_general.format(11)))
 
     print("Day 12")
-    day_twelve(Path(file_path_general.format(12)))
+    if not short_run:
+        day_twelve(Path(file_path_general.format(12)))
+    else:
+        print("Skipping day 12 due to long runtime")
+
+    print("Day 13")
+    day_thirteen(Path(file_path_general.format(13)))
 
 if __name__ == "__main__":
-    main()
+    main(short_run=True)
