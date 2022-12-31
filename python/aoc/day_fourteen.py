@@ -32,7 +32,7 @@ def day_fourteen_part_one(file_path):
     max_y = max(max_y, sand_entry[1])
     standardized_stone_lines = standardize_cave(stone_lines, min_x, min_y)
     sand_entry = (sand_entry[0] - min_x, sand_entry[1] - min_y)
-    cave = Cave(max_x + 1 - min_x , max_y + 1 - min_y)
+    cave = Cave(max_x + 1 - min_x, max_y + 1 - min_y)
     cave = build_cave(cave, standardized_stone_lines)
     space_full = False
     number_sands = 0
@@ -141,9 +141,13 @@ def build_cave(cave, stone_lines):
         for i in range(len(stone_line)-1):
             node, next_node = stone_line[i], stone_line[i + 1]
             diff = node[0] - next_node[0], node[1] - next_node[1]
-            diff_value = max(diff)
-            index = argmax(diff)
-            for i in range(diff_value + 1):
+            diff_value = [d for d in diff if d != 0][0]
+            index = diff.index(diff_value)
+            if diff_value < 0:
+                range_ = (diff_value, 1, 1)
+            else:
+                range_ = (0, diff_value + 1, 1)
+            for i in range(*range_):
                 if index == 0:
                     cave[next_node[0] + i, node[1]] = 1
                 else:
