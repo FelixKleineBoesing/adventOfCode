@@ -15,8 +15,8 @@ value_mapping = {0: ".", 1: "#", 2: "o"}
 
 
 def print_cave(cave):
-    for y in range(cave.max_y):
-        for x in range(cave.max_x):
+    for y in range(cave.len_y-1, -1, -1):
+        for x in range(cave.len_x):
             value = value_mapping[cave[x, y]]
             print(value, end="")
         print()
@@ -40,37 +40,48 @@ def day_fourteen_part_one(file_path):
         particle_settled = False
         current_pos = sand_entry
         while not particle_settled:
-            particle_settled, current_pos = check_if_move_possible(cave, current_pos)
+            move_possible, move_out_of_bound, current_pos = check_if_move_possible(cave, current_pos)
+            if not move_possible:
+                particle_settled = True
 
-        if current_pos[0] <= 0 or 0 > current_pos[1] > cave.max_y:
+        if move_out_of_bound:
             space_full = True
         else:
             cave[current_pos] = 2
-        number_sands += 1
+            number_sands += 1
         if current_pos == sand_entry:
             space_full = True
 
     print_cave(cave)
+    print("Number of sands: ", number_sands)
     return cave, number_sands
 
 
 def check_if_move_possible(cave, current_pos):
-    if place_free(cave, current_pos, (0, -1)):
+    inbound_down, free_down = place_free(cave, current_pos, (0, -1))
+    inbound_left, free_left = place_free(cave, current_pos, (-1, -1))
+    inbound_right, free_right = place_free(cave, current_pos, (1, -1))
+
+    if inbound_down and free_down:
         new_pos = move_particle(current_pos, (0, -1))
-        return True, new_pos
-    elif place_free(cave, current_pos, (-1, -1)):
+        return free_down, inbound_down, new_pos
+    elif inbound_left and free_left:
         new_pos = move_particle(current_pos, (-1, -1))
-        return True, new_pos
-    elif place_free(cave, current_pos, (1, -1)):
+        return free_left, inbound_left, new_pos
+    elif inbound_right and free_right:
         new_pos = move_particle(current_pos, (1, -1))
-        return True, new_pos
-    return False, current_pos
+        return inbound_right, free_right, new_pos
+    return False, not (inbound_right and inbound_left and inbound_right), current_pos
 
 
 def place_free(cave, current_pos, direction):
-    if cave[current_pos[0] + direction[0], current_pos[1] + direction[1]] == 0:
-        return True
-    return False
+    xn, yn = current_pos[0] + direction[0], current_pos[1] + direction[1]
+    if cave.inbound(xn, yn):
+        if cave[xn, yn] == 0:
+            return True, True
+    else:
+        return False, False
+    return True, False
 
 
 def move_particle(current_pos, direction):
@@ -91,6 +102,10 @@ class Cave:
         self.grid = [[0 for _ in range(len_y)] for _ in range(len_x)]
 
     def __getitem__(self, item):
+        if item[0] >= self.len_x or item[0] < 0:
+            raise IndexError("X Axis out of bounds with value {}".format(item[0]))
+        if item[1] >= self.len_y or -self.len_y > item[1]:
+            raise IndexError("Y Axis out of bounds with value: {}".format(item[1]))
         return self.grid[item[0]][item[1]]
 
     def __setitem__(self, key, value):
@@ -99,6 +114,11 @@ class Cave:
     def shape(self):
         return self.len_x, self.len_y
 
+    def inbound(self, x = None, y = None):
+        inbound = True
+        inbound = inbound and x < self.len_x and x >= 0
+        inbound = inbound and y < self.len_y and -self.len_y < y
+        return inbound
 
 def day_fourteen_part_two(file_path):
     pass
@@ -122,7 +142,8 @@ def parse_lines(lines):
         nodes = []
         for node in nodes_strings:
             x, y = node.split(",")
-            x, y = (int(x), int(y))
+            # i change every y value to zero, since they are decreasing (0 is top and 9 is bottom)
+            x, y = (int(x), -int(y))
             min_x = min(min_x, x)
             max_x = max(max_x, x)
             min_y = min(min_y, y)
