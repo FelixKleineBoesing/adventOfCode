@@ -175,3 +175,43 @@ def build_cave(cave, stone_lines):
                     cave[next_node[0], next_node[1] + i] = 1
 
     return cave
+
+
+def add_rocks_to_set(lines):
+    rocks = set()
+    for line in lines:
+        nodes_strings = [tuple(map(int, n.split(","))) for n in line.split(" -> ")]
+        for i in range(len(nodes_strings) - 1):
+            p1, p2 = nodes_strings[i], nodes_strings[i + 1]
+            xr = range(min(p1[0], p2[0]), max(p1[0], p2[0]) + 1)
+            yr = range(min(p1[1], p2[1]), max(p1[1], p2[1]) + 1)
+            rocks.update({(x, y) for x in xr for y in yr})
+    return rocks
+
+
+def day_fourteen_part_two(file_path):
+    lines = read_file_clean(file_path)
+    rocks = add_rocks_to_set(lines)
+
+    max_y = max((y for _, y in rocks))
+    sand_entry = (500, 0)
+    x, y = sand_entry
+    sands = set()
+    while True:
+        if (x, y) in rocks:  # restart sand at origin
+            (x, y) = (500, 0)
+        if (x, y + 1) not in rocks and y < max_y + 1:
+            y += 1
+        elif (x - 1, y + 1) not in rocks and y < max_y + 1:
+            x -= 1
+            y += 1
+        elif (x + 1, y + 1) not in rocks and y < max_y + 1:
+            x += 1
+            y += 1
+        else:  # hit somoething
+            rocks.add((x, y))
+            sands.add((x, y))
+        if (x, y) == (500, 0):
+            # print reached sand entry again
+            break
+    print("Number of sands: {}".format(len(sands)))
