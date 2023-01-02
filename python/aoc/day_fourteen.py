@@ -16,6 +16,7 @@ value_mapping = {0: ".", 1: "#", 2: "o"}
 
 def print_cave(cave):
     for y in range(cave.len_y-1, -1, -1):
+        print(str(y).zfill(3), end = "")
         for x in range(cave.len_x):
             value = value_mapping[cave[x, y]]
             print(value, end="")
@@ -36,6 +37,7 @@ def day_fourteen_part_one(file_path):
     cave = build_cave(cave, standardized_stone_lines)
     space_full = False
     number_sands = 0
+    sands = set()
     while not space_full:
         particle_settled = False
         current_pos = sand_entry
@@ -44,15 +46,16 @@ def day_fourteen_part_one(file_path):
             if not move_possible:
                 particle_settled = True
 
-        if move_out_of_bound:
+        if move_out_of_bound or current_pos[1] < 0:
             space_full = True
         else:
             cave[current_pos] = 2
             number_sands += 1
+            sand_re_stand = (current_pos[0] + min_x, -(current_pos[1] + min_y))
+            sands.add(sand_re_stand)
         if current_pos == sand_entry:
             space_full = True
 
-    print_cave(cave)
     print("Number of sands: ", number_sands)
     return cave, number_sands
 
@@ -120,9 +123,6 @@ class Cave:
         inbound = inbound and y < self.len_y and -self.len_y < y
         return inbound
 
-def day_fourteen_part_two(file_path):
-    pass
-
 
 def standardize_cave(stone_lines, x_min: int, y_min: int):
     standardized_stone_lines = []
@@ -161,7 +161,6 @@ def build_cave(cave, stone_lines):
     for stone_line in stone_lines:
         for i in range(len(stone_line)-1):
             node, next_node = stone_line[i], stone_line[i + 1]
-            # TODOthis is wrong
             diff = node[0] - next_node[0], node[1] - next_node[1]
             diff_value = [d for d in diff if d != 0][0]
             index = diff.index(diff_value)
