@@ -2,6 +2,7 @@ from pathlib import Path
 
 from day_eight import day_eight
 from day_eleven import day_eleven
+from day_fifteen import day_fifteen
 from day_fourteen import day_fourteen
 from day_seven import day_seven
 from day_six import day_six
@@ -62,6 +63,9 @@ def main(short_run: bool = False):
 
     print("Day 14")
     day_fourteen(Path(file_path_general.format(14)))
+
+    print("Day 15")
+    day_fifteen(Path(file_path_general.format(15)))
 
 if __name__ == "__main__":
     main(short_run=True)
