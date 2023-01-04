@@ -6,6 +6,7 @@ from day_fifteen import day_fifteen
 from day_fourteen import day_fourteen
 from day_seven import day_seven
 from day_six import day_six
+from day_sixteen import day_sixteen
 from day_thirteen import day_thirteen
 from python.aoc.day_five import day_five
 from python.aoc.day_nine import day_nine
@@ -66,6 +67,9 @@ def main(short_run: bool = False):
 
     print("Day 15")
     day_fifteen(Path(file_path_general.format(15)))
+
+    print("Day 16")
+    day_sixteen(Path(file_path_general.format(16)))
 
 if __name__ == "__main__":
     main(short_run=True)
